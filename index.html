@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AyB Registro de tiempo</title>
+<link type="image/png" sizes="24x24" rel="icon" href="favicon.png">
+<style>
+//https://drive.google.com/file/d/1-2Dz0vMtug-s5yrKpT355EN0VHi-NY86/view?usp=sharing
+.left, .right {
+  float: left;
+  width: 20%; /* The width is 20%, by default */
+}
+
+.main {
+  float: left;
+  width: 60%; /* The width is 60%, by default */
+}
+
+/* Use a media query to add a breakpoint at 500px: */
+@media screen and (max-width: 500px) {
+  .left, .main, .right {
+    width: 100%; /* The width is 100%, when the viewport is 800px or smaller */
+  }
+  .center {
+	width:50px
+  }
+}
+
+
+html {
+  font-family: verdana,sans-serif;
+}
+
+.th .td {
+  color: #444;
+  //text-align: center;
+  align: center;
+}
+ 
+.buttonXX {
+  width: 100%;
+  background-color: #008CBA;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  //width: 50%;
+}
+
+#example {
+        top: 200px;
+        left: 50%;
+        width: 300px;
+        //height: 18em;
+        margin-top: -9em;
+        margin-left: -15em;
+        //border: 1px solid #666;
+        //background-color: #b9faac;
+        position: fixed;
+}
+
+.btn {
+  //padding-left:30px;
+  width: 100%;
+  //background-color: DodgerBlue; /* Blue background */
+  //background-position: center;
+  border: 1; /* Remove borders */
+  //color: white; /* White text */
+  padding: 12px 0px 12px 0px; /* Some padding */
+  font-size: 16px; /* Set a font size */
+  cursor: pointer; /* Mouse pointer on hover */
+  text-align: center;
+  //background-origin: content-box;
+  //display: inline-block;
+}
+
+.btn_in {
+  background:url('icon_in.png') no-repeat left center;
+  background-size: 25px;
+  background-origin: content-box;
+  background-position: relative;
+}
+
+.btn_out {
+  background:url('icon_out.png') no-repeat left center;
+  background-size: 25px;
+  background-origin: content-box;
+}
+
+.btn:hover {
+  background-color: black;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="left">LEFT</div>
+<div class="main">
+
+<image src="logo-ayb-sin-fondo.png" class="center" />
+
+<br/>
+<br/>
+
+<table border="1" width="100%">
+<tr><td align="center">Hoy</td><td align="center">Saldo</td></tr>
+<tr><td align="center">7:41h</td><td align="center">1:35h</td></tr>
+</table>
+
+<br/>
+<button class="btn btn_in" onclick="entrada()">Entrada</button>
+<button class="btn btn_out" onclick="salida()">Salida</button>
+<br/>
+
+<br/>
+<button class="btn">Registrar vacaciones</button>
+<br/>
+<button class="btn">Registrar falta por salud</button> 
+<br/>
+<button class="btn">Registrar compensacion</button> 
+<br/>
+</div>
+<div class="right">RIGHT</div>
+</body>
+<script>
+
+function entrada() {
+	apicall(1);
+}
+
+function salida() {
+	apicall(2);
+}
+
+function apicall(type) {
+	var url_string = window.location.href; 
+	var url = new URL(url_string);
+	var uid = url.searchParams.get("uid");
+	//var row = url.searchParams.get("row");
+	
+	//let s = new Date().toLocaleString();
+	//var data = s;
+	//var row = 0;
+
+	var xhr = new XMLHttpRequest();
+	//xhr.withCredentials = true;
+
+	xhr.addEventListener("readystatechange", function () {
+	  if (this.readyState === this.DONE) {
+		//row = this.responseText;
+		//console.log("ROWinListener:" + row);
+		//console.log("HEAD:" + this.getAllResponseHeaders());
+        var json = JSON.parse(xhr.responseText);
+        console.log(json.test);
+		//if ('URLSearchParams' in window) {
+			//var searchParams = new URLSearchParams(window.location.search)
+			//searchParams.set("row", row);
+			//var newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
+			//history.pushState(null, '', newRelativePathQuery);
+		//}
+
+	  }
+	});
+	//console.log("ROWafterListener:" + row);
+    //request.onreadystatechange = function() {
+    //    if (this.readyState == 4 && this.status == 200) {
+    //        console.log(this.responseText);
+    //    }
+    //};
+
+	xhr.open("POST", "https://hook.us1.make.com/chjo3ek7c3t8mxnvz2wvj5589j6qlhco");
+	//xhr.open("POST", "https://hook.us1.make.com/chjo3ek7c3t8mxnvz2wvj5589j6qlhco?tipo=" + type + "&uid=" + uid);
+	//xhr.open("POST", "https://hook.us1.make.com/tyvi0a4smca4m6h6zba13u82mm8elggi?tipo=" + type + "&uid=" + uid + "&row=" + row);
+	//xhr.open("POST", "http://mockbin.org/bin/867e3aac-0e4b-408f-a639-b98b178577cc?tipo=" + type);
+	//xhr.setRequestHeader("cookie", "foo=bar; bar=baz");
+	xhr.setRequestHeader("Content-Type", "application/json");
+	var data = JSON.stringify({"tipo": type, "uid": uid});
+
+	xhr.send(data);
+}
+</script>
+</html>
+
+
